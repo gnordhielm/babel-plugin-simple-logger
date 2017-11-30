@@ -4,7 +4,9 @@
 [![npm](https://img.shields.io/npm/dt/babel-plugin-simple-logger.svg?style=flat-square)](https://www.npmjs.com/package/babel-plugin-simple-logger)
 [![npm](https://img.shields.io/npm/v/babel-plugin-simple-logger.svg?style=flat-square)](https://www.npmjs.com/package/babel-plugin-simple-logger)
 
-This loader looks for the string literal `"log"` after the opening bracket of a function and replaces it with `console.log(<function name>, arguments)`.
+> Special thanks to [Michael Jungo](https://github.com/jungomi) for walking me through putting this together.
+
+This loader looks for the string literal `"log"` after the opening bracket of a function automatically adds a console log containing the name of the function.
 
 ## Installation & Usage
 
@@ -16,22 +18,18 @@ yarn add babel-plugin-simple-logger --dev
 
 ```
 
-**Incorporate the loader**
+**Incorporate the plugin**
 
 ```js
 // .babelrc
 ...
-{
-	test: /\.(js)$/,
-	exclude: /(node_modules)/,
-	use: [
-		{ loader: 'ng-annotate-loader' },
-		{ loader: 'babel-loader', options: { presets: ['es2015', 'stage-0'] } },
-		{ loader: 'babel-plugin-simple-logger' }
-	]
-},
+"env": {
+	"development": {
+		"presets": ["react", "env", "stage-0"],
+		"plugins": ["simple-logger"]
+	},
 ...
-
+}
 ```
 
 **Test it out**
@@ -42,24 +40,19 @@ function greeter(name) { 'log'
 	return `Hello, ${name || 'world'}!`
 }
 
-console.log(greeter("Gus"))
+greeter("Gus")
 
-// greeter ["Gus", callee: (...), Symbol(Symbol.iterator): ƒ]
-// Hello, Gus!
+// greeter: ["Gus", callee: (...), Symbol(Symbol.iterator): ƒ]
 
-const berater = name => {
+const berater = name='world' => {
 	"log"
-	return `I'm tired of your shit, ${name || 'world'}.`
+	return `I'm tired of your shit, ${name}.`
 }
 
-console.log(berater())
+berater()
 
-// anonymous [undefined, callee: (...), Symbol(Symbol.iterator): ƒ]
-// I'm tired of your shit, world.
+// anonymous: [undefined, callee: (...), Symbol(Symbol.iterator): ƒ]
 
 ```
 
-Keep in mind:
-* `"log"` must be the first string literal following the function's opening bracket `{`.
-* This loader is best used early on, it cleans up after itself and understands arrow functions.
-* This loader is a litle bit brittle at the moment, I'm working on refactoring it as a babel plugin, but do keep an eye out for edge cases where it doesn't work (for example, if you try to destructure an object in the parameters).
+Note: Arrow functions with implicit returns aren't candidates for logging with this plugin's syntax. 
