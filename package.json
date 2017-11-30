@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-simple-logger",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A babel plugin which provides a convenient shortcut for logging JavaScript functions.",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,9 @@
     "tools",
     "console",
     "logging",
-    "log"
+    "log",
+    "automation",
+    "tools"
   ],
   "author": "Gus Nordhielm",
   "license": "ISC",
