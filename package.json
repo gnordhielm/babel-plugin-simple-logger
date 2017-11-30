@@ -1,0 +1,28 @@
+{
+  "name": "babel-plugin-simple-logger",
+  "version": "1.0.0",
+  "description": "A babel plugin which provides a convenient shortcut for logging JavaScript functions.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gnordhielm/babel-plugin-simple-logger.git"
+  },
+  "keywords": [
+    "babel",
+    "development",
+    "utilities",
+    "tools",
+    "console",
+    "logging",
+    "log"
+  ],
+  "author": "Gus Nordhielm",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gnordhielm/babel-plugin-simple-logger/issues"
+  },
+  "homepage": "https://github.com/gnordhielm/babel-plugin-simple-logger#readme"
+}
