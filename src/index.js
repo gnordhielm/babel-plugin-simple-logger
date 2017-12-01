@@ -15,10 +15,12 @@ export default function({ types: t }) {
                     if (t.isFunctionDeclaration(func.node)) {
                         name = func.node.id.name
                       	params = func.node.params.map(param => param.name)
+                    } else if (t.isFunctionExpression(func.node) &&
+                       func.node.id) {
+                        name = func.node.id.name
+                      	params = func.node.params.map(param => param.name)
                     } else if (t.isVariableDeclarator(func.parent)) {
                         name = func.parent.id.name
-                      	params = func.node.params.map(param => param.name)
-                    } else if (t.isFunctionExpression(func.node)) {
                       	params = func.node.params.map(param => param.name)
                     } else if (t.isObjectMethod(func.node)) {
                         name = func.node.key.name
@@ -31,6 +33,11 @@ export default function({ types: t }) {
                         params = func.node.params.map(param => param.name)
                     } else if (t.isClassProperty(func.parent)) {
                         name = func.parent.key.name
+                      	params = func.node.params.map(param => param.name)
+                    } else if (t.isAssignmentExpression(func.parent)) {
+                        name = func.parent.left.property.name
+                      	params = func.node.params.map(param => param.name)
+                    } else if (t.isFunctionExpression(func.node)) {
                       	params = func.node.params.map(param => param.name)
                     }
 

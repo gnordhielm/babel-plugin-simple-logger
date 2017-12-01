@@ -3,8 +3,6 @@ import fs from 'fs'
 import { parse, transform, traverse } from 'babel-core'
 import plugin from "../dist/index.js"
 
-const mockLog = jest.fn()
-console.log = mockLog
 const fnName = "fnName"
 const fnNameWithStylePrefix = `%c${fnName}`
 const anonymousWithStylePrefix = `%canonymous`
@@ -27,6 +25,10 @@ function transformAndCall(code, invocation) {
   `)
 }
 
+beforeEach(() => {
+  console.log = jest.fn()
+})
+
 test("function delcarations", () => {
 
   const code = `
@@ -41,201 +43,260 @@ test("function delcarations", () => {
 
   transformAndCall(code, call)
 
-  expect(mockLog).toHaveBeenCalledWith(
+  expect(console.log).toHaveBeenCalledWith(
     fnNameWithStylePrefix, styleColor, "foo", "bar"
   )
 
 })
 
-// test("function expressions", () => {
-//
-//   const code = `
-//     function ${fnName}(foo, bar) {
-//       "log";
-//     }
-//   `
-//
-//   const call = `
-//     ${fnName}("foo", "bar")
-//   `
-//
-//   transformAndCall(code, call)
-//
-//   expect(mockLog).toHaveBeenCalledWith(
-//     fnNameWithStylePrefix, styleColor, "foo", "bar"
-//   )
-// })
-//
-// test("arrow function expressions", () => {
-//
-//   const code = `
-//     function ${fnName}(foo, bar) {
-//       "log";
-//     }
-//   `
-//
-//   const call = `
-//     ${fnName}("foo", "bar")
-//   `
-//
-//   transformAndCall(code, call)
-//
-//   expect(mockLog).toHaveBeenCalledWith(
-//     fnNameWithStylePrefix, styleColor, "foo", "bar"
-//   )
-// })
-//
-// test("ignore implicit return arrow functions", () => {
-//
-//   const code = `
-//     function ${fnName}(foo, bar) {
-//       "log";
-//     }
-//   `
-//
-//   const call = `
-//     ${fnName}("foo", "bar")
-//   `
-//
-//   transformAndCall(code, call)
-//
-//   expect(mockLog).toHaveBeenCalledWith(
-//     fnNameWithStylePrefix, styleColor, "foo", "bar"
-//   )
-// })
-//
-// test("complex arguments", () => {
-//
-//   const code = `
-//     function ${fnName}(foo, bar) {
-//       "log";
-//     }
-//   `
-//
-//   const call = `
-//     ${fnName}("foo", "bar")
-//   `
-//
-//   transformAndCall(code, call)
-//
-//   expect(mockLog).toHaveBeenCalledWith(
-//     fnNameWithStylePrefix, styleColor, "foo", "bar"
-//   )
-// })
-//
-// test("object methods", () => {
-//
-//   const code = `
-//     function ${fnName}(foo, bar) {
-//       "log";
-//     }
-//   `
-//
-//   const call = `
-//     ${fnName}("foo", "bar")
-//   `
-//
-//   transformAndCall(code, call)
-//
-//   expect(mockLog).toHaveBeenCalledWith(
-//     fnNameWithStylePrefix, styleColor, "foo", "bar"
-//   )
-// })
-//
-// test("object properties", () => {
-//
-//   const code = `
-//     function ${fnName}(foo, bar) {
-//       "log";
-//     }
-//   `
-//
-//   const call = `
-//     ${fnName}("foo", "bar")
-//   `
-//
-//   transformAndCall(code, call)
-//
-//   expect(mockLog).toHaveBeenCalledWith(
-//     fnNameWithStylePrefix, styleColor, "foo", "bar"
-//   )
-// })
-//
-// test("anonymous cases", () => {
-//
-//   const code = `
-//     function ${fnName}(foo, bar) {
-//       "log";
-//     }
-//   `
-//
-//   const call = `
-//     ${fnName}("foo", "bar")
-//   `
-//
-//   transformAndCall(code, call)
-//
-//   expect(mockLog).toHaveBeenCalledWith(
-//     fnNameWithStylePrefix, styleColor, "foo", "bar"
-//   )
-// })
-//
-// test("class methods", () => {
-//
-//   const code = `
-//     function ${fnName}(foo, bar) {
-//       "log";
-//     }
-//   `
-//
-//   const call = `
-//     ${fnName}("foo", "bar")
-//   `
-//
-//   transformAndCall(code, call)
-//
-//   expect(mockLog).toHaveBeenCalledWith(
-//     fnNameWithStylePrefix, styleColor, "foo", "bar"
-//   )
-// })
-//
-// test("class properties", () => {
-//
-//   const code = `
-//     function ${fnName}(foo, bar) {
-//       "log";
-//     }
-//   `
-//
-//   const call = `
-//     ${fnName}("foo", "bar")
-//   `
-//
-//   transformAndCall(code, call)
-//
-//   expect(mockLog).toHaveBeenCalledWith(
-//     fnNameWithStylePrefix, styleColor, "foo", "bar"
-//   )
-// })
-//
-// test("ignore non-directive usages", () => {
-//
-//   const code = `
-//     function ${fnName}(foo, bar) {
-//       "log";
-//     }
-//   `
-//
-//   const call = `
-//     ${fnName}("foo", "bar")
-//   `
-//
-//   transformAndCall(code, call)
-//
-//   expect(mockLog).toHaveBeenCalledWith(
-//     fnNameWithStylePrefix, styleColor, "foo", "bar"
-//   )
-// })
+test("function expressions", () => {
+
+  const code = `
+    const ${fnName} = function(foo, bar) {
+      "log";
+    }
+  `
+
+  const call = `
+    ${fnName}("foo", "bar")
+  `
+
+  transformAndCall(code, call)
+
+  expect(console.log).toHaveBeenCalledWith(
+    fnNameWithStylePrefix, styleColor, "foo", "bar"
+  )
+})
+
+test("arrow function expressions", () => {
+
+  const code = `
+    const ${fnName} = arg => { "log"; };
+  `
+  const call = `
+    ${fnName}("foo")
+  `
+
+  transformAndCall(code, call)
+
+  expect(console.log).toHaveBeenCalledWith(
+    fnNameWithStylePrefix, styleColor, "foo"
+  )
+})
+
+test("ignore implicit return arrow functions", () => {
+
+  const code = `
+    const ${fnName} = arg1 => "log";
+  `
+
+  const call = `
+    ${fnName}("foo")
+  `
+
+  transformAndCall(code, call)
+
+  expect(console.log).not.toHaveBeenCalled()
+})
+
+test("object methods", () => {
+
+  const code = `
+    const foo = {
+      ${fnName}: function(arg1) { "log"; },
+      ${fnName}Arrow: arg1 => { "log"; }
+    }
+  `
+
+  const call = `
+    foo.${fnName}("bar")
+  `
+
+  transformAndCall(code, call)
+
+  expect(console.log).toHaveBeenLastCalledWith(
+    fnNameWithStylePrefix, styleColor, "bar"
+  )
+
+  const callArrow = `
+    foo.${fnName}Arrow("baz")
+  `
+
+  transformAndCall(code, callArrow)
+
+  expect(console.log).toHaveBeenLastCalledWith(
+    fnNameWithStylePrefix.replace("Name", "NameArrow"), styleColor, "baz"
+  )
+
+})
+
+test("object properties", () => {
+
+  const code = `
+    const foo = {
+      ${fnName}(arg1, arg2) { "log"; }
+    }
+  `
+
+  const call = `
+    foo.${fnName}("foo", "bar")
+  `
+
+  transformAndCall(code, call)
+
+  expect(console.log).toHaveBeenCalledWith(
+    fnNameWithStylePrefix, styleColor, "foo", "bar"
+  )
+})
+
+test("anonymous cases", () => {
+
+  const codeAndCall = `
+    ["foo", "bar", "baz"].map(item => { "log"; return item; });
+  `
+  transformAndCall(codeAndCall)
+
+  expect(console.log).toHaveBeenCalledTimes(3)
+  expect(console.log).toHaveBeenLastCalledWith(
+    anonymousWithStylePrefix, styleGray, "baz"
+  )
+
+  const arrowCodeAndCall = `
+  ["foo", "bar"].map(function(item, idx) { "log"; return item; });
+  `
+  transformAndCall(arrowCodeAndCall)
+
+  expect(console.log).toHaveBeenCalledTimes(5)
+  expect(console.log).toHaveBeenLastCalledWith(
+    anonymousWithStylePrefix, styleGray, "bar", 1
+  )
+
+})
+
+test("class methods", () => {
+
+  const code = `
+    class Foo {
+      ${fnName}(arg) {
+        "log"
+        return arg
+      }
+    }
+  `
+
+  const call = `
+    const fooInstance = new Foo()
+    fooInstance.${fnName}("bar")
+  `
+
+  transformAndCall(code, call)
+
+  expect(console.log).toHaveBeenCalledWith(
+    fnNameWithStylePrefix, styleColor, "bar"
+  )
+
+})
+
+test("class properties", () => {
+
+  const code = `
+    class Foo {
+      ${fnName} = arg => {
+        "log"
+        return arg
+      }
+    }
+  `
+
+  const call = `
+    const fooInstance = new Foo()
+    fooInstance.${fnName}("bar")
+  `
+
+  transformAndCall(code, call)
+
+  expect(console.log).toHaveBeenCalledWith(
+    fnNameWithStylePrefix, styleColor, "bar"
+  )
+
+})
+
+test("complex arguments", () => {
+
+  const code = `
+    function ${fnName}(
+      { "log": arg } = { defaultMethod() { "log" }, "log": 42 }
+    ) {
+      "log"
+      return arg;
+    }
+  `
+
+  const call = `
+    ${fnName}({ log: _ => _ })
+  `
+
+  transformAndCall(code, call)
+  expect(console.log).toHaveBeenCalledTimes(1)
+
+  const callWithoutArg = `
+    ${fnName}()
+  `
+
+  transformAndCall(code, callWithoutArg)
+  expect(console.log).toHaveBeenCalledTimes(2)
+
+})
+
+test("ignore non-directive usages", () => {
+
+  const code = `
+    function ${fnName}1(log) { log("don't"); }
+    function ${fnName}2(arg1) { const someVar = "log"; }
+  `
+
+  const call = `
+    ${fnName}1(_ => _)
+    ${fnName}2("foo")
+  `
+
+  const logCode = `
+  function ${fnName}3(arg1) { console.log("foo"); }
+  `
+
+  const callLog = `
+    ${fnName}3("foo")
+  `
+
+  transformAndCall(code, call)
+  expect(console.log).not.toHaveBeenCalled()
+
+  transformAndCall(logCode, callLog)
+  expect(console.log).toHaveBeenCalledWith("foo")
+
+})
+
+test("play well with other directives", () => {
+
+  const otherDirective = `
+    function ${fnName}(arg1, arg2) { "directive"; }
+  `
+  const withOtherDirective = `
+    function ${fnName}(arg1, arg2) { "directive"; "log"; }
+  `
+  const call = `
+    ${fnName}("foo", "bar")
+  `
+
+  transformAndCall(otherDirective, call)
+  expect(console.log).not.toHaveBeenCalled()
+
+  transformAndCall(withOtherDirective, call)
+  expect(console.log).toHaveBeenCalledWith(
+    fnNameWithStylePrefix, styleColor, "foo", "bar"
+  )
+
+})
 
 test("different colors for anonymous functions", () => {
 
@@ -251,7 +312,7 @@ test("different colors for anonymous functions", () => {
 
   transformAndCall(code, call)
 
-  expect(mockLog).toHaveBeenCalledWith(
+  expect(console.log).toHaveBeenCalledWith(
     fnNameWithStylePrefix, styleColor, "foo"
   )
 
@@ -263,204 +324,8 @@ test("different colors for anonymous functions", () => {
 
   transformAndCall(codeAndCall)
 
-  expect(mockLog).toHaveBeenCalledWith(
+  expect(console.log).toHaveBeenCalledWith(
     anonymousWithStylePrefix, styleGray, "foo"
   )
 
 })
-
-
-// const strip = str => str
-//     .replace(/\s/g,'')
-//     .replace(/;/g,'')
-//     .replace(/\"usestrict\"/g,'')
-
-// test("in function", () => {
-//
-//     const input = `function myFunction(arg1) { "log" }`
-//     const output = `
-//         function myFunction(arg1) {
-//             console.log("myFunction", arguments)
-//         }
-//     `
-//     expect(strip(load(input))).toBe(strip(output))
-//
-// })
-//
-// test("ignore function with console log", () => {
-//
-//     const input = `function myFunction(arg1) { console.log("don't") }`
-//
-//     expect(strip(load(input))).toBe(strip(input))
-//
-// })
-//
-//
-// test("ignore log as an argument", () => {
-//
-//     const input = `function myFunction(log) { log("don't") }`
-//
-//     expect(strip(load(input))).toBe(strip(input))
-//
-// })
-//
-// test("ignore log as a variable assignment", () => {
-//
-//     const input = `function myFunction(arg1) { var someVar = "log" }`
-//
-//     expect(strip(load(input))).toBe(strip(input))
-//
-// })
-//
-// test("ignore other directives", () => {
-//
-//     const input = `function myFunction(arg1) { "directive" }`
-//
-//     expect(strip(load(input))).toBe(strip(input))
-//
-// })
-//
-// test("with log and another directive", () => {
-//
-//     const input = `function myFunction(arg1) {
-//         "directive"
-//         "log"
-//     }`
-//
-//     const output = `function myFunction(arg1) {
-//       "directive"
-//       console.log("myFunction", arguments)
-//     }`
-//
-//     expect(strip(load(input))).toBe(strip(output))
-//
-// })
-//
-// test("with complex arguments", () => {
-//
-//     const input = `function complexArgsFunction(
-//         { "log": arg }={ defaultMethod() { "log" }, "log": 42 }
-//     ) { "log"
-//         return arg
-//     }`
-//
-//     const output = `function complexArgsFunction({ "log": arg } = { defaultMethod() {
-//       console.log("defaultMethod", arguments)
-//     }, "log": 42 }) {
-//       console.log("complexArgsFunction", arguments)
-//       return arg
-//     }`
-//
-//     expect(strip(load(input))).toBe(strip(output))
-//
-// })
-//
-// test("in function declaration", () => {
-//
-//     const input = `const namedFunctionExpression = function(arg1) { "log" }`
-//
-//     const output = `const namedFunctionExpression = function(arg1) {
-//       console.log("namedFunctionExpression", arguments)
-//     }`
-//
-//     expect(strip(load(input))).toBe(strip(output))
-//
-// })
-//
-// test("in arrow function declaration", () => {
-//
-//     const input = `const namedArrowFunction = arg1 => { "log" }`
-//     const output = `
-//         var_arguments = arguments
-//         const namedArrowFunction = arg1 => {
-//             console.log("namedArrowFunction", _arguments)
-//         }`
-//
-//     expect(strip(load(input))).toBe(strip(output))
-//
-// })
-//
-// test("ignores implicit return arrow with log", () => {
-//
-//     const input = `const namedArrowFunctionWithoutBlock = arg1 => "log"`
-//
-//     expect(strip(load(input))).toBe(strip(input))
-//
-// })
-//
-// test("within object methods", () => {
-//
-//     const input = `const obj = {
-//         myMethod: function(arg1) { "log" },
-//         arrowFnMethod: arg1 => { "log" },
-//         methodShorthand(arg1) { "log" }
-//     }`
-//     const output = `
-//     var _arguments = arguments
-//     const obj = {
-//       myMethod: function(arg1) {
-//         console.log("myMethod", arguments)
-//       },
-//       arrowFnMethod: arg1 => {
-//         console.log("arrowFnMethod", _arguments)
-//       },
-//       methodShorthand(arg1) {
-//         console.log("methodShorthand", arguments)
-//       }
-//     }`
-//
-//     expect(strip(load(input))).toBe(strip(output))
-//
-// })
-//
-// test("within anonymous functions", () => {
-//
-//     let input = `[1, 2, 3].map(arg => { "log"
-//         return arg * 2
-//     })`
-//     let output = `
-//     var _arguments = arguments
-//     [1, 2, 3].map(arg => {
-//       console.log("anonymous", _arguments)
-//       return arg * 2
-//     })`
-//
-//     expect(strip(load(input))).toBe(strip(output))
-//
-//     input = `[1, 2, 3].map(function(arg) {
-//         "log"
-//         return arg * 2
-//     })`
-//     output = `[1, 2, 3].map(function(arg) {
-//       console.log("anonymous", arguments)
-//       return arg * 2
-//     })`
-//
-//     expect(strip(load(input))).toBe(strip(output))
-//
-// })
-
-// describe("function types - classes", () => {
-//
-//   test("property ", () => {
-//
-//     let input = `[1, 2, 3].map(arg => { "log"
-//     return arg * 2
-//     })`
-//     let output = `
-//     var _arguments = arguments
-//     [1, 2, 3].map(arg => {
-//     console.log("anonymous", _arguments)
-//     return arg * 2
-//     })`
-//
-//
-//     expect(true).toBe(true)
-//
-//   })
-//
-//   test("arrow function", () => {
-//
-//   })
-//
-// })

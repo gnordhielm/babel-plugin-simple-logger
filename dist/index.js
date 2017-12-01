@@ -22,12 +22,13 @@ exports.default = function (_ref) {
                         params = func.node.params.map(function (param) {
                             return param.name;
                         });
-                    } else if (t.isVariableDeclarator(func.parent)) {
-                        name = func.parent.id.name;
+                    } else if (t.isFunctionExpression(func.node) && func.node.id) {
+                        name = func.node.id.name;
                         params = func.node.params.map(function (param) {
                             return param.name;
                         });
-                    } else if (t.isFunctionExpression(func.node)) {
+                    } else if (t.isVariableDeclarator(func.parent)) {
+                        name = func.parent.id.name;
                         params = func.node.params.map(function (param) {
                             return param.name;
                         });
@@ -48,6 +49,15 @@ exports.default = function (_ref) {
                         });
                     } else if (t.isClassProperty(func.parent)) {
                         name = func.parent.key.name;
+                        params = func.node.params.map(function (param) {
+                            return param.name;
+                        });
+                    } else if (t.isAssignmentExpression(func.parent)) {
+                        name = func.parent.left.property.name;
+                        params = func.node.params.map(function (param) {
+                            return param.name;
+                        });
+                    } else if (t.isFunctionExpression(func.node)) {
                         params = func.node.params.map(function (param) {
                             return param.name;
                         });
