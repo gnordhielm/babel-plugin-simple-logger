@@ -19,12 +19,18 @@ export default function({ types: t }) {
                         name = func.node.key.name
                     } else if (t.isObjectProperty(func.parent)) {
                         name = func.parent.key.name
+                    } else if (t.isClassMethod(func.node)) {
+                        name = func.node.key.name
+                    } else if (t.isClassProperty(func.parent)) {
+                        name = func.parent.key.name
                     }
 
                     // create node representing log statement
+                    const color = name === "anonymous" ? "gray" : "#0077cc"
                     const logNode = t.expressionStatement(
                         t.callExpression(t.identifier("console.log"), [
-                            t.stringLiteral(name),
+                            t.stringLiteral(`%c${name}`),
+                            t.stringLiteral(`color: ${color}`),
                             t.identifier("arguments")
                         ])
                     )
