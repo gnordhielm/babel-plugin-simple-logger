@@ -6,16 +6,29 @@
 
 > Special thanks to [Michael Jungo](https://github.com/jungomi) for walking me through putting this together.
 
-This loader looks for the string literal `"log"` after the opening bracket of a function automatically adds a console log containing the name of the function.
+This loader looks for the string literal `"log"` after the opening bracket of a function and replaces it with a console log containing the name and arguments of the enclosing function.
+
+```js
+
+const add = (a, b) => { 'log'
+	return a + b
+}
+
+// becomes...
+
+const add = (a, b) => {
+	console.log('add', arguments)
+	return a + b
+}
+
+```
 
 ## Installation & Usage
 
 **Install the package**
+
 ```bash
-npm i -D babel-plugin-simple-logger
-
 yarn add babel-plugin-simple-logger --dev
-
 ```
 
 **Incorporate the plugin**
@@ -55,4 +68,4 @@ berater()
 
 ```
 
-Note: Arrow functions with implicit returns aren't candidates for logging with this plugin's syntax. 
+Note: Arrow functions with implicit returns aren't candidates for logging with this plugin's syntax.
