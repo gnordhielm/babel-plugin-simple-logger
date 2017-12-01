@@ -179,27 +179,27 @@ function load(str='') {
 //
 // })
 
-describe("function types - classes", () => {
-
-  test("property ", () => {
-
-    let input = `[1, 2, 3].map(arg => { "log"
-    return arg * 2
-    })`
-    let output = `
-    var _arguments = arguments
-    [1, 2, 3].map(arg => {
-    console.log("anonymous", _arguments)
-    return arg * 2
-    })`
-
-
-    expect(true).toBe(true)
-
-  })
-
-  test("arrow function", () => {
-    
-  })
-
-})
+// describe("function types - classes", () => {
+//
+//   test("property ", () => {
+//
+//     let input = `[1, 2, 3].map(arg => { "log"
+//     return arg * 2
+//     })`
+//     let output = `
+//     var _arguments = arguments
+//     [1, 2, 3].map(arg => {
+//     console.log("anonymous", _arguments)
+//     return arg * 2
+//     })`
+//
+//
+//     expect(true).toBe(true)
+//
+//   })
+//
+//   test("arrow function", () => {
+//
+//   })
+//
+// })
