@@ -239,29 +239,27 @@ test("function delcarations", () => {
 
 test("different colors for anonymous functions", () => {
 
-  // const code = `
-  //   function ${fnName}(foo) {
-  //     "log";
-  //   }
-  // `
-  //
-  // const call = `
-  //   ${fnName}("foo")
-  // `
-  //
-  // transformAndCall(code, call)
-  //
-  // expect(mockLog).toHaveBeenCalledWith(
-  //   fnNameWithStylePrefix, styleColor, "foo"
-  // )
+  const code = `
+    function ${fnName}(foo) {
+      "log";
+    }
+  `
 
+  const call = `
+    ${fnName}("foo")
+  `
+
+  transformAndCall(code, call)
+
+  expect(mockLog).toHaveBeenCalledWith(
+    fnNameWithStylePrefix, styleColor, "foo"
+  )
 
   const codeAndCall = `
     (function(arg1){
       'log'
     })("foo")
   `
-  console.warn(load(codeAndCall))
 
   transformAndCall(codeAndCall)
 
