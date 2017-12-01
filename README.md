@@ -9,7 +9,6 @@
 This Babel plugin looks for the string literal `"log"` after the opening bracket of a function and replaces it with `console.log(<function name>, <arg1>, <arg2>, etc...)`.
 
 ```js
-
 const add = (a, b) => { 'log'
 	return a + b
 }
@@ -20,7 +19,6 @@ const add = (a, b) => {
 	console.log('add', a, b)
 	return a + b
 }
-
 ```
 
 ## Installation & Usage
