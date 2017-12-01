@@ -18,7 +18,7 @@ test("in function", () => {
     const input = `function myFunction(arg1) { "log" }`
     const output = `
         function myFunction(arg1) {
-            console.log("myFunction", arguments)
+            console.log("> myFunction", arguments)
         }
     `
     expect(strip(load(input))).toBe(strip(output))
@@ -27,7 +27,7 @@ test("in function", () => {
 
 test("ignore function with console log", () => {
 
-    const input = `function myFunction(arg1) { console.log("don't") }`
+    const input = `function myFunction(arg1) { console.log("> don't") }`
 
     expect(strip(load(input))).toBe(strip(input))
 
@@ -67,7 +67,7 @@ test("with log and another directive", () => {
 
     const output = `function myFunction(arg1) {
       "directive"
-      console.log("myFunction", arguments)
+      console.log("> myFunction", arguments)
     }`
 
     expect(strip(load(input))).toBe(strip(output))
@@ -83,9 +83,9 @@ test("with complex arguments", () => {
     }`
 
     const output = `function complexArgsFunction({ "log": arg } = { defaultMethod() {
-      console.log("defaultMethod", arguments)
+      console.log("> defaultMethod", arguments)
     }, "log": 42 }) {
-      console.log("complexArgsFunction", arguments)
+      console.log("> complexArgsFunction", arguments)
       return arg
     }`
 
@@ -98,7 +98,7 @@ test("in function declaration", () => {
     const input = `const namedFunctionExpression = function(arg1) { "log" }`
 
     const output = `const namedFunctionExpression = function(arg1) {
-      console.log("namedFunctionExpression", arguments)
+      console.log("> namedFunctionExpression", arguments)
     }`
 
     expect(strip(load(input))).toBe(strip(output))
@@ -111,7 +111,7 @@ test("in arrow function declaration", () => {
     const output = `
         var_arguments = arguments
         const namedArrowFunction = arg1 => {
-            console.log("namedArrowFunction", _arguments)
+            console.log("> namedArrowFunction", _arguments)
         }`
 
     expect(strip(load(input))).toBe(strip(output))
@@ -137,13 +137,13 @@ test("within object methods", () => {
     var _arguments = arguments
     const obj = {
       myMethod: function(arg1) {
-        console.log("myMethod", arguments)
+        console.log("> myMethod", arguments)
       },
       arrowFnMethod: arg1 => {
-        console.log("arrowFnMethod", _arguments)
+        console.log("> arrowFnMethod", _arguments)
       },
       methodShorthand(arg1) {
-        console.log("methodShorthand", arguments)
+        console.log("> methodShorthand", arguments)
       }
     }`
 
@@ -159,7 +159,7 @@ test("within anonymous functions", () => {
     let output = `
     var _arguments = arguments
     [1, 2, 3].map(arg => {
-      console.log("anonymous", _arguments)
+      console.log("> anonymous", _arguments)
       return arg * 2
     })`
 
@@ -170,7 +170,7 @@ test("within anonymous functions", () => {
         return arg * 2
     })`
     output = `[1, 2, 3].map(function(arg) {
-      console.log("anonymous", arguments)
+      console.log("> anonymous", arguments)
       return arg * 2
     })`
 

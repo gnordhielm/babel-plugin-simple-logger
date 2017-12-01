@@ -27,7 +27,7 @@ exports.default = function (_ref) {
                     }
 
                     // create node representing log statement
-                    var logNode = t.expressionStatement(t.callExpression(t.identifier("console.log"), [t.stringLiteral(name), t.identifier("arguments")]));
+                    var logNode = t.expressionStatement(t.callExpression(t.identifier("console.log"), [t.stringLiteral("> " + name), t.identifier("arguments")]));
 
                     // insert node
                     func.get("body").unshiftContainer("body", logNode);

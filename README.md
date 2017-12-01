@@ -11,11 +11,13 @@ This loader looks for the string literal `"log"` after the opening bracket of a 
 ## Installation & Usage
 
 **Install the package**
+
 ```bash
 npm i -D babel-plugin-simple-logger
+```
 
+```bash
 yarn add babel-plugin-simple-logger --dev
-
 ```
 
 **Incorporate the plugin**
@@ -42,7 +44,7 @@ function greeter(name) { 'log'
 
 greeter("Gus")
 
-// greeter: ["Gus", callee: (...), Symbol(Symbol.iterator): ƒ]
+// > greeter ["Gus", callee: (...), Symbol(Symbol.iterator): ƒ]
 
 const berater = name='world' => {
 	"log"
@@ -51,8 +53,8 @@ const berater = name='world' => {
 
 berater()
 
-// anonymous: [undefined, callee: (...), Symbol(Symbol.iterator): ƒ]
+// > anonymous [undefined, callee: (...), Symbol(Symbol.iterator): ƒ]
 
 ```
 
-Note: Arrow functions with implicit returns aren't candidates for logging with this plugin's syntax. 
+Note: Arrow functions with implicit returns aren't candidates for logging with this plugin's syntax.

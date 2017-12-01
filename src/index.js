@@ -24,7 +24,7 @@ export default function({ types: t }) {
                     // create node representing log statement
                     const logNode = t.expressionStatement(
                         t.callExpression(t.identifier("console.log"), [
-                            t.stringLiteral(name),
+                            t.stringLiteral(`> ${name}`),
                             t.identifier("arguments")
                         ])
                     )
