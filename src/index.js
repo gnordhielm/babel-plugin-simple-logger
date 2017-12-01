@@ -41,11 +41,3 @@ export default function({ types: t }) {
         }
     }
 }
-
-// export default function({}) {
-//     return {
-//         visitor: {
-//             ExpressionStatement(path)
-//         }
-//     }
-// }
