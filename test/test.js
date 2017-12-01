@@ -3,11 +3,274 @@ import fs from 'fs'
 import { parse, transform, traverse } from 'babel-core'
 import plugin from "../dist/index.js"
 
+const mockLog = jest.fn()
+console.log = mockLog
+const fnName = "fnName"
+const fnNameWithStylePrefix = `%c${fnName}`
+const anonymousWithStylePrefix = `%canonymous`
+const styleColor = "color: #0077cc"
+const styleGray = "color: gray"
+
 function load(str='') {
-    const result = transform(str, { plugins: [plugin] })
-    console.log("load", result)
+    const result = transform(str, {
+      presets: ["env", "stage-0"],
+      plugins: [plugin]
+    })
+
     return result.code
 }
+
+function transformAndCall(code, invocation) {
+  eval(`
+    ${load(code)}
+    ${invocation}
+  `)
+}
+
+test("function delcarations", () => {
+
+  const code = `
+    function ${fnName}(foo, bar) {
+      "log";
+    }
+  `
+
+  const call = `
+    ${fnName}("foo", "bar")
+  `
+
+  transformAndCall(code, call)
+
+  expect(mockLog).toHaveBeenCalledWith(
+    fnNameWithStylePrefix, styleColor, "foo", "bar"
+  )
+
+})
+
+// test("function expressions", () => {
+//
+//   const code = `
+//     function ${fnName}(foo, bar) {
+//       "log";
+//     }
+//   `
+//
+//   const call = `
+//     ${fnName}("foo", "bar")
+//   `
+//
+//   transformAndCall(code, call)
+//
+//   expect(mockLog).toHaveBeenCalledWith(
+//     fnNameWithStylePrefix, styleColor, "foo", "bar"
+//   )
+// })
+//
+// test("arrow function expressions", () => {
+//
+//   const code = `
+//     function ${fnName}(foo, bar) {
+//       "log";
+//     }
+//   `
+//
+//   const call = `
+//     ${fnName}("foo", "bar")
+//   `
+//
+//   transformAndCall(code, call)
+//
+//   expect(mockLog).toHaveBeenCalledWith(
+//     fnNameWithStylePrefix, styleColor, "foo", "bar"
+//   )
+// })
+//
+// test("ignore implicit return arrow functions", () => {
+//
+//   const code = `
+//     function ${fnName}(foo, bar) {
+//       "log";
+//     }
+//   `
+//
+//   const call = `
+//     ${fnName}("foo", "bar")
+//   `
+//
+//   transformAndCall(code, call)
+//
+//   expect(mockLog).toHaveBeenCalledWith(
+//     fnNameWithStylePrefix, styleColor, "foo", "bar"
+//   )
+// })
+//
+// test("complex arguments", () => {
+//
+//   const code = `
+//     function ${fnName}(foo, bar) {
+//       "log";
+//     }
+//   `
+//
+//   const call = `
+//     ${fnName}("foo", "bar")
+//   `
+//
+//   transformAndCall(code, call)
+//
+//   expect(mockLog).toHaveBeenCalledWith(
+//     fnNameWithStylePrefix, styleColor, "foo", "bar"
+//   )
+// })
+//
+// test("object methods", () => {
+//
+//   const code = `
+//     function ${fnName}(foo, bar) {
+//       "log";
+//     }
+//   `
+//
+//   const call = `
+//     ${fnName}("foo", "bar")
+//   `
+//
+//   transformAndCall(code, call)
+//
+//   expect(mockLog).toHaveBeenCalledWith(
+//     fnNameWithStylePrefix, styleColor, "foo", "bar"
+//   )
+// })
+//
+// test("object properties", () => {
+//
+//   const code = `
+//     function ${fnName}(foo, bar) {
+//       "log";
+//     }
+//   `
+//
+//   const call = `
+//     ${fnName}("foo", "bar")
+//   `
+//
+//   transformAndCall(code, call)
+//
+//   expect(mockLog).toHaveBeenCalledWith(
+//     fnNameWithStylePrefix, styleColor, "foo", "bar"
+//   )
+// })
+//
+// test("anonymous cases", () => {
+//
+//   const code = `
+//     function ${fnName}(foo, bar) {
+//       "log";
+//     }
+//   `
+//
+//   const call = `
+//     ${fnName}("foo", "bar")
+//   `
+//
+//   transformAndCall(code, call)
+//
+//   expect(mockLog).toHaveBeenCalledWith(
+//     fnNameWithStylePrefix, styleColor, "foo", "bar"
+//   )
+// })
+//
+// test("class methods", () => {
+//
+//   const code = `
+//     function ${fnName}(foo, bar) {
+//       "log";
+//     }
+//   `
+//
+//   const call = `
+//     ${fnName}("foo", "bar")
+//   `
+//
+//   transformAndCall(code, call)
+//
+//   expect(mockLog).toHaveBeenCalledWith(
+//     fnNameWithStylePrefix, styleColor, "foo", "bar"
+//   )
+// })
+//
+// test("class properties", () => {
+//
+//   const code = `
+//     function ${fnName}(foo, bar) {
+//       "log";
+//     }
+//   `
+//
+//   const call = `
+//     ${fnName}("foo", "bar")
+//   `
+//
+//   transformAndCall(code, call)
+//
+//   expect(mockLog).toHaveBeenCalledWith(
+//     fnNameWithStylePrefix, styleColor, "foo", "bar"
+//   )
+// })
+//
+// test("ignore non-directive usages", () => {
+//
+//   const code = `
+//     function ${fnName}(foo, bar) {
+//       "log";
+//     }
+//   `
+//
+//   const call = `
+//     ${fnName}("foo", "bar")
+//   `
+//
+//   transformAndCall(code, call)
+//
+//   expect(mockLog).toHaveBeenCalledWith(
+//     fnNameWithStylePrefix, styleColor, "foo", "bar"
+//   )
+// })
+
+test("different colors for anonymous functions", () => {
+
+  // const code = `
+  //   function ${fnName}(foo) {
+  //     "log";
+  //   }
+  // `
+  //
+  // const call = `
+  //   ${fnName}("foo")
+  // `
+  //
+  // transformAndCall(code, call)
+  //
+  // expect(mockLog).toHaveBeenCalledWith(
+  //   fnNameWithStylePrefix, styleColor, "foo"
+  // )
+
+
+  const codeAndCall = `
+    (function(arg1){
+      'log'
+    })("foo")
+  `
+  console.warn(load(codeAndCall))
+
+  transformAndCall(codeAndCall)
+
+  expect(mockLog).toHaveBeenCalledWith(
+    anonymousWithStylePrefix, styleGray, "foo"
+  )
+
+})
+
 
 // const strip = str => str
 //     .replace(/\s/g,'')

@@ -18,6 +18,8 @@ export default function({ types: t }) {
                     } else if (t.isVariableDeclarator(func.parent)) {
                         name = func.parent.id.name
                       	params = func.node.params.map(param => param.name)
+                    } else if (t.isFunctionExpression(func.node)) {
+                      	params = func.node.params.map(param => param.name)
                     } else if (t.isObjectMethod(func.node)) {
                         name = func.node.key.name
                         params = func.node.params.map(param => param.name)
@@ -37,7 +39,8 @@ export default function({ types: t }) {
                     const logArgs = [
                       `"%c${name}"`,
                       `"color: ${color}"`,
-                      ...params]
+                      ...params
+                    ]
 
                     const logNode = t.expressionStatement(
                         t.callExpression(t.identifier("console.log"), [
@@ -50,7 +53,6 @@ export default function({ types: t }) {
 
                     // clean up directive
                     path.remove()
-
 
                 }
             }
