@@ -4,17 +4,28 @@
 [![npm](https://img.shields.io/npm/dt/babel-plugin-simple-logger.svg?style=flat-square)](https://www.npmjs.com/package/babel-plugin-simple-logger)
 [![npm](https://img.shields.io/npm/v/babel-plugin-simple-logger.svg?style=flat-square)](https://www.npmjs.com/package/babel-plugin-simple-logger)
 
-> Special thanks to [Michael Jungo](https://github.com/jungomi) for walking me through putting this together.
+> Special thanks to [Michael Jungo](https://github.com/jungomi) for helping me put the first version together.
 
-This loader looks for the string literal `"log"` after the opening bracket of a function automatically adds a console log containing the name of the function.
+This Babel plugin looks for the string literal `"log"` after the opening bracket of a function and replaces it with `console.log(<function name>, <arg1>, <arg2>, etc...)`.
+
+```js
+
+const add = (a, b) => { 'log'
+	return a + b
+}
+
+// becomes...
+
+const add = (a, b) => {
+	console.log('add', a, b)
+	return a + b
+}
+
+```
 
 ## Installation & Usage
 
 **Install the package**
-
-```bash
-npm i -D babel-plugin-simple-logger
-```
 
 ```bash
 yarn add babel-plugin-simple-logger --dev
@@ -37,24 +48,15 @@ yarn add babel-plugin-simple-logger --dev
 **Test it out**
 
 ```js
-
-function greeter(name) { 'log'
-	return `Hello, ${name || 'world'}!`
+function greeter(name='world') { 'log'
+	return `Hello, ${name}!`
 }
 
 greeter("Gus")
 
-// > greeter ["Gus", callee: (...), Symbol(Symbol.iterator): ƒ]
+// logs...
 
-const berater = name='world' => {
-	"log"
-	return `I'm tired of your shit, ${name}.`
-}
-
-berater()
-
-// > anonymous [undefined, callee: (...), Symbol(Symbol.iterator): ƒ]
-
+greeter "Gus"
 ```
 
-Note: Arrow functions with implicit returns aren't candidates for logging with this plugin's syntax.
+Note: Arrow functions with implicit returns (e.g. `(a, b) => a + b`) aren't candidates for logging with this plugin's syntax.

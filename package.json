@@ -1,9 +1,9 @@
 {
   "name": "babel-plugin-simple-logger",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Gus Nordhielm",
-  "description": "A babel plugin which provides a convenient shortcut for logging JavaScript functions.",
-  "main": "dist/index.js",
+  "description": "A Babel plugin which provides a convenient syntax for logging from within JavaScript functions.",
+  "main": "main/index.js",
   "scripts": {
     "build": "babel src/index.js --out-file dist/index.js",
     "prepublish": "npm run build",
@@ -34,7 +34,7 @@
     "babel-cli": "^6.1.0",
     "babel-core": "^6.1.0",
     "babel-generator": "^6.1.2",
-    "babel-preset-env": "^6.1.0",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-stage-0": "^6.1.18",
     "jest": "^21.2.1"
   }
